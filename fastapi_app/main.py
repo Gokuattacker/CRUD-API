@@ -4,6 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker ,Session
 from models.key_value_model import SamplePayload, KeyValueCreate, KeyValueUpdate
+from constants.db_url_constant import DATABASE_URL
 
 app = FastAPI()
 app.add_middleware(
@@ -14,9 +15,8 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-SQLALCHEMY_DATABASE_URL = "mysql://roneswar:ABHIgyan@localhost/botguage"
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
