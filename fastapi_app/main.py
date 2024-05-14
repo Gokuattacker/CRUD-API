@@ -1,9 +1,9 @@
 from fastapi import FastAPI, HTTPException , Depends
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from sqlalchemy import create_engine, Column, String, Text
+from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker ,Session
+from models.key_value_model import KeyValue, KeyValueCreate, KeyValueUpdate
 
 app = FastAPI()
 app.add_middleware(
@@ -14,27 +14,13 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-#Replace the below URL with your own database URL
-SQLALCHEMY_DATABASE_URL = "mysql://mydatabaseuser:mypassword@localhost/mydatabase"
- # For MySQL: "mysql://mydatabaseuser:mypassword@localhost/mydatabase"
+SQLALCHEMY_DATABASE_URL = "mysql://roneswar:ABHIgyan@localhost/botguage"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
-class KeyValue(Base):
- __tablename__ = "kvstore_keyvalue"
-key = Column(String, primary_key=True, index=True)
-value = Column(Text)
-
 Base.metadata.create_all(bind=engine)
-
-class KeyValueCreate(BaseModel):
- key: str
- value: str
-
-class KeyValueUpdate(BaseModel):
- value: str
 
 def get_db():
       db = SessionLocal()
