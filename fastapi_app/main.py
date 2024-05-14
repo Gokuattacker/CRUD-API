@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker ,Session
-from models.key_value_model import KeyValue, KeyValueCreate, KeyValueUpdate
+from models.key_value_model import SamplePayload, KeyValueCreate, KeyValueUpdate
 
 app = FastAPI()
 app.add_middleware(
@@ -31,7 +31,7 @@ def get_db():
 
 @app.post("/create/")
 def create_key_value(kv: KeyValueCreate, db: Session = Depends(get_db)):
-  db_kv = KeyValue(key=kv.key, value=kv.value)
+  db_kv = SamplePayload(sample_p_key=kv.key, sample_value=kv.value)
   db.add(db_kv)
   db.commit()
   db.refresh(db_kv)
@@ -39,14 +39,14 @@ def create_key_value(kv: KeyValueCreate, db: Session = Depends(get_db)):
 
 @app.get("/retrieve/{key}")
 def read_key_value(key: str, db: Session = Depends(get_db)):
- db_kv = db.query(KeyValue).filter(KeyValue.key == key).first()
+ db_kv = db.query(SamplePayload).filter(SamplePayload.sample_p_key == key).first()
  if db_kv is None:
    raise HTTPException(status_code=404, detail="Key not found")
  return db_kv
 
 @app.put("/update/{key}")
 def update_key_value(key: str, kv: KeyValueUpdate, db: Session = Depends(get_db)):
- db_kv = db.query(KeyValue).filter(KeyValue.key == key).first()
+ db_kv = db.query(SamplePayload).filter(SamplePayload.sample_p_key == key).first()
  if db_kv is None:
   raise HTTPException(status_code=404, detail="Key not found")
  db_kv.value = kv.value
@@ -56,7 +56,7 @@ def update_key_value(key: str, kv: KeyValueUpdate, db: Session = Depends(get_db)
 
 @app.delete("/delete/{key}")
 def delete_key_value(key: str, db: Session = Depends(get_db)):
- db_kv = db.query(KeyValue).filter(KeyValue.key == key).first()
+ db_kv = db.query(SamplePayload).filter(SamplePayload.sample_p_key == key).first()
  if db_kv is None:
   raise HTTPException(status_code=404, detail="Key not found")
  db.delete(db_kv)
