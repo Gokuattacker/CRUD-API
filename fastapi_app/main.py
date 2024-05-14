@@ -73,6 +73,6 @@ def delete_key_value(key: str, db: Session = Depends(get_db)):
  db_kv = db.query(KeyValue).filter(KeyValue.key == key).first()
  if db_kv is None:
   raise HTTPException(status_code=404, detail="Key not found")
-  db.delete(db_kv)
-  db.commit()
-  return {"message": "Key deleted"}
+ db.delete(db_kv)
+ db.commit()
+ return {"message": "Key deleted"}
